@@ -12,6 +12,21 @@ import time
 win=GraphWin("Click Hunt",600,600)
 win.setBackground("Black")
 
+def main():
+
+    menu()
+
+    #Background Text
+    clickSquares= Text(Point(300,300), "Click the Squares!")
+    clickSquares.setFill("Green")
+    clickSquares.draw(win)
+    #Gameplay
+    Gameplay()
+    #Undraws the background text to showcase Final Score
+    clickSquares.undraw()
+
+    win.getMouse()
+    win.close()
 
 #Start Menu
 def menu():
@@ -20,23 +35,19 @@ def menu():
     startLine.draw(win)
     win.getMouse()
     startLine.undraw()
-menu()
 
-#Background Text
-clickSquares= Text(Point(300,300), "Click the Squares!")
-clickSquares.setFill("Green")
-clickSquares.draw(win)
 
-Sum=0
-#Time
-Timer=60
-TimerEnd = time.time()+Timer
-BackTime= Text(Point(300,270),f"You have {Timer} seconds")
-BackTime.setFill("Green")
-BackTime.draw(win)
 # Gameplay
 def Gameplay():
+    #Variable to vount the amount of squares clicked
     Sum=0
+    #Sets the timer
+    Timer=60
+    TimerEnd = time.time()+Timer
+    BackTime= Text(Point(300,270),f"You have {Timer} seconds")
+    BackTime.setFill("Green")
+    BackTime.draw(win)
+
     while time.time() < TimerEnd :
         MpositionX= random.randint(100,300)
         MpositionY= random.randint(300,500)
@@ -69,17 +80,14 @@ def Gameplay():
     #Counts the squares you touched 
         Sum=Sum+1
     #Deletes the Text in the Background
-    clickSquares.undraw()
     BackTime.undraw()
-    #Shows Final Score
+    
+#Shows Final Score:
     End= Text(Point(300,300),f"Final Score:{Sum}")
     End.setFill("Green")
     End.draw(win)
-    win.getMouse()
+    
+main()
 
-Gameplay()
-        
 
-win.getMouse()
-win.close()
 
