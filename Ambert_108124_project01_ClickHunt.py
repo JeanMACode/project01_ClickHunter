@@ -14,19 +14,30 @@ win.setBackground("Black")
 
 def main():
 
+    #Click to start the game
     menu()
 
     #Background Text
-    clickSquares= Text(Point(300,300), "Click the Squares!")
-    clickSquares.setFill("Green")
-    clickSquares.draw(win)
-    #Gameplay
-    Gameplay()
-    #Undraws the background text to showcase Final Score
-    clickSquares.undraw()
+    Background=BackgroundText(win)
 
+    #Gameplay
+    Gameplay(win)
+
+    #Undraws the background text to showcase Final Score
+    Background.undraw()
+
+    #Click to Exit
     win.getMouse()
     win.close()
+
+
+#Text that appears during Gameplay
+def BackgroundText(win):
+    clickCircles= Text(Point(300,300), "Click the Figures!")
+    clickCircles.setFill("Green")
+    clickCircles.draw(win)
+    return clickCircles
+
 
 #Start Menu
 def menu():
@@ -36,57 +47,115 @@ def menu():
     win.getMouse()
     startLine.undraw()
 
-
-# Gameplay
-def Gameplay():
-    #Variable to vount the amount of squares clicked
-    Sum=0
-    #Sets the timer
+#Sets the amount of Time that the while loop will run
+def setTimer():
     Timer=60
     TimerEnd = time.time()+Timer
-    BackTime= Text(Point(300,270),f"You have {Timer} seconds")
-    BackTime.setFill("Green")
-    BackTime.draw(win)
+    return Timer,TimerEnd
 
-    while time.time() < TimerEnd :
+
+#sets the center coordinates to appear in
+def Spawner():
+
+    radius=random.randint(4,30)
+
+    Mdecision=random.randint(1,80)
+    #multiple decisions to assure that the figures appears more randomly
+    if (20>Mdecision>10):
+        MpositionX= random.randint(10,30)
+        MpositionY= random.randint(40,50)
+            
+    elif (30>Mdecision>20):
         MpositionX= random.randint(100,300)
+        MpositionY= random.randint(400,500)
+            
+    elif (40>Mdecision>30):
+        MpositionX= random.randint(20,300)
+        MpositionY= random.randint(300,350)
+            
+    elif (50>Mdecision>40):
+        MpositionX= random.randint(500,540)
+        MpositionY= random.randint(400,500)
+            
+    elif (60>Mdecision>50):
+        MpositionX= random.randint(100,300)
+        MpositionY= random.randint(30,300)
+           
+    elif (70>Mdecision>60):
+        MpositionX= random.randint(50,500)
+        MpositionY= random.randint(60,110)
+            
+
+    elif (80>Mdecision>70):
+        MpositionX= random.randint(20,300)
         MpositionY= random.randint(300,500)
-        Mposition=Rectangle(Point(MpositionX,MpositionY),Point(MpositionY,MpositionX))
-        MX=Mposition.getP1()
-        MY=Mposition.getP2()
+            
+    else: 
+        MpositionX= random.randint(100,520)
+        MpositionY= random.randint(100,550)
+
+
+    return MpositionX, MpositionY, radius
+
+
+
+#Checks if the mouse clicked the figure
+def Check(radius,Mposition):
+    check=win.getMouse()
+    ClickCount=1
+    dx=check.getX() - Mposition.getCenter().getX()
+    dy=check.getY() - Mposition.getCenter().getY() 
+    distance=(dx**2 + dy**2)**(1/2)
+
+
+    while (distance>=radius):
+        check=win.getMouse()
+        dx=check.getX() - Mposition.getCenter().getX()
+        dy=check.getY() - Mposition.getCenter().getY() 
+        distance=(dx**2 + dy**2)**(1/2)
+        ClickCount+=1
+    return ClickCount
+
+# Gameplay
+def Gameplay(win):
+
+    #Variable that counts the amount of clicks
+    ClickAmount=0
+
+    #Variable to count the amount of circles clicked
+    Sum=0
+
+    #Sets the timer
+    Timer,TimerEnd=setTimer()
+    
+    while time.time() < TimerEnd :
+
+        MpositionX,MpositionY,radius= Spawner()
+        Mposition=Circle(Point(MpositionX,MpositionY),radius)
         Mposition.setFill(color_rgb(0,120,0))
         Mposition.draw(win)
-    #Booleans that return a true thats gonna be used for the while
-        check=win.getMouse()
-        CHECKX1=check.getX() >= MX.getX() 
-        CHECKX2=check.getX()<=MY.getX()
-        CHECKY1=check.getY() >= MX.getY() 
-        CHECKY2=check.getY()<=MY.getY()
-        CHECKX=CHECKX1 == CHECKX2
-        CHECKY=CHECKY1 == CHECKY2
-    #Square Spawner
-        while (CHECKX!=CHECKY):
-            check=win.getMouse()
-            CHECKX1=check.getX() >= MX.getX() 
-            CHECKX2=check.getX()<=MY.getX()
-            CHECKY1=check.getY() >= MX.getY() 
-            CHECKY2=check.getY()<=MY.getY()
-            CHECKX=CHECKX1 == CHECKX2
-            CHECKY=CHECKY1 == CHECKY2
-            
-               
-    #Eliminates the square if touched  
+
+
+        Checking_Clicks=Check(radius,Mposition)
+        ClickAmount+=Checking_Clicks
+                
+    #Eliminates the circle if touched  
         Mposition.undraw()
-    #Counts the squares you touched 
+    #Counts the circles you touched 
         Sum=Sum+1
-    #Deletes the Text in the Background
-    BackTime.undraw()
     
-#Shows Final Score:
-    End= Text(Point(300,300),f"Final Score:{Sum}")
-    End.setFill("Green")
-    End.draw(win)
     
+#Shows Final Score and amount of clicks:
+    TimerUsed=Text(Point(300,260),f"With {Timer} seconds your results are:")
+    TimerUsed.setFill("Green")
+    FinalScore= Text(Point(300,300),f"Final Score:{Sum}")
+    FinalScore.setFill("Green")
+    Amount_of_Clicks=Text(Point(300,340),f"Amount of clicks: {ClickAmount}")
+    Amount_of_Clicks.setFill("Green")
+
+    TimerUsed.draw(win)
+    FinalScore.draw(win)
+    Amount_of_Clicks.draw(win)
 main()
 
 
