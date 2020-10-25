@@ -41,7 +41,7 @@ class ClickHunt():
         set_Timer.undraw()
         set_the_Timer.undraw()
         TimerValue = set_the_Timer.getText()
-        Timer=int(TimerValue)
+        Timer=float(TimerValue)
      
         TimerEnd = time.time()+Timer
         return Timer,TimerEnd
